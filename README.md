@@ -1,3 +1,5 @@
+__NOTE: This project was started back in February 2019 and was put on the sideline sometime in March 2019.__
+
 # SpiderBT
 __A simple yet effective bug tracker that's written in Python using Django Framework.__
 
