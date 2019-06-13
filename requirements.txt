@@ -1,0 +1,7 @@
+Django==2.1.5
+arrow
+Pillow
+Markdown
+social-auth-app-django
+django-filebrowser-no-grappelli
+djangorestframework

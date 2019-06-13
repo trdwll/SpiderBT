@@ -1,0 +1,44 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ product.title }} Cases{% endblock %}
+
+
+{% block content %}
+<div class="row mb-2">
+                    
+    <div class="col-xs-12 col-md-6">
+        <div class="card bg-danger-lite">
+            <div class="card-header">
+                <h4>Latest Opened Cases for {{ product.title }}</h4>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if opened_cases %}
+                {% for case in opened_cases %}
+                <li class="list-group-item"><a href="{{ case.get_absolute_url }}">{{ case.identifier }} {{ case.title }}</a></li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item">No Cases have been opened! <i class="far fa-smile"></i></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-md-6">
+        <div class="card bg-success-lite">
+            <div class="card-header">
+                <h4>Latest Closed Cases for {{ product.title }}</h4>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% if closed_cases %}
+                {% for case in closed_cases %}
+                <li class="list-group-item"><a href="{{ case.get_absolute_url }}">{{ case.identifier }} {{ case.title }}</a></li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item">No Cases have been closed! <i class="far fa-frown"></i></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

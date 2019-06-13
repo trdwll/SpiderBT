@@ -1,0 +1,94 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ case.title }}{% endblock %}
+
+{% block content %}
+<p class="lead">{{ case.title }}</p>
+<div class="row"> 
+    <div class="col-xs-12 col-md-8">
+        <div class="card">
+            <h5 class="card-header">Description</h5>
+            <div class="card-body">
+                <p class="card-text">{{ case.body }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td class="text-center display-4" width="45%">{{ votes }}</td>
+                    <td width="55%">
+                        {% if has_voted %}
+                        <button class="btn btn-lg btn-success btn-block" disabled>Voted</button>
+                        {% elif case.status == 'fixed' or case.status == 'closed' %}
+                        <button class="btn btn-lg btn-success btn-block" disabled>Voting Disabled</button>
+                        {% elif has_voted == False and request.user.is_authenticated and not case.status == 'fixed' or case.status == 'closed' %}
+                        <form method="post" action="{{ case.get_vote_url }}" role="form">
+                            {% csrf_token %}
+                            <button class="btn btn-lg btn-success btn-block" type="submit">Vote</button>
+                        </form>
+                        {% else %}
+                        <button class="btn btn-lg btn-success btn-block" disabled>Login to Vote</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th scope="row" class="bg-light">Category</th>
+                    {% comment %} /search?product={{ case.product }}&category={{ case.category }} {% endcomment %}
+                    <td><a href="#TODOADDSEARCH">{{ case.category }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="bg-light">Status</th>
+                    <td>{{ case.get_status_display }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="bg-light">Affects Versions</th>
+                    <td>
+                    {% comment %} /search?case=true&product={{ case.product }}&ver={{ ver }} {% endcomment %}
+                    {% for ver in case.affect_version.all %}
+                    <a href="#TODOADDSEARCH">{{ ver }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" class="bg-light">Severity</th>
+                    <td><a href="#TODOADDSEARCH">{{ case.get_severity_display }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="bg-light">Creation Date</th>
+                    <td>{{ case.date_created }}</td>
+                </tr>
+
+                {% comment %} If the case is not open then lets show the dates. {% endcomment %}
+                {% if case.status != 'open' %}
+                <tr>
+                    <th scope="row" class="bg-light">Update Date</th>
+                    <td>{{ case.date_updated }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="bg-light">Solved Date</th>
+                    <td>{{ case.date_solved }}</td>
+                </tr>
+                {% endif %}
+                
+                {% comment %} If the case is closed then we should show the patched information. {% endcomment %}
+                {% if case.status == 'fixed' %}
+                <tr>
+                    <th scope="row" class="bg-light">Patched Version</th>
+                    <td>{{ case.patch_version }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" class="bg-light">Patched Commit</th>
+                    <td>{{ case.patch_commit }}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
